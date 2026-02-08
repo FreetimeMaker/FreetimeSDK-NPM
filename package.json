@@ -1,6 +1,6 @@
 {
     "name": "freetimesdk",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "The Official Payment SDK from Freetime Maker - A completely self-contained, open-source multi-cryptocurrency payment SDK for Node.js and browsers",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -8,8 +8,14 @@
         "build": "tsc",
         "prepare": "npm run build",
         "test": "jest",
+        "test:coverage": "jest --coverage",
         "lint": "eslint src/**/*.ts",
-        "dev": "ts-node src/index.ts"
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "dev": "ts-node src/index.ts",
+        "prepublishOnly": "npm run build && npm test && npm run lint",
+        "preversion": "npm run lint",
+        "version": "npm run build",
+        "postversion": "git push && git push --tags"
     },
     "keywords": [
         "cryptocurrency",
@@ -67,5 +73,11 @@
     },
     "engines": {
         "node": ">=16.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "browser": {
+        "crypto": false
     }
 }

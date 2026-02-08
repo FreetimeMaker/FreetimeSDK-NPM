@@ -1,0 +1,36 @@
+# Source files
+src/
+*.ts
+!*.d.ts
+tsconfig.json
+jest.config.js
+.eslintrc.js
+
+# Development files
+examples/
+.nyc_output/
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.spec.ts

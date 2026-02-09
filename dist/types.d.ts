@@ -9,6 +9,15 @@ export declare enum CoinType {
     BINANCE_COIN = "BNB",
     TRON = "TRX"
 }
+export declare const COIN_SYMBOLS: Record<CoinType, string>;
+export declare function getCoinSymbol(coinType: CoinType): string;
+export declare enum PaymentStatus {
+    PENDING = "pending",
+    CONFIRMED = "confirmed",
+    EXPIRED = "expired",
+    FAILED = "failed",
+    NOT_FOUND = "not_found"
+}
 export declare const COIN_TYPE_MAP: Record<string, CoinType>;
 export interface Wallet {
     address: string;

@@ -10,6 +10,32 @@ export enum CoinType {
   TRON = 'TRX'
 }
 
+// Add symbol mapping for CoinType
+export const COIN_SYMBOLS: Record<CoinType, string> = {
+  [CoinType.BITCOIN]: 'BTC',
+  [CoinType.ETHEREUM]: 'ETH',
+  [CoinType.LITECOIN]: 'LTC',
+  [CoinType.BITCOIN_CASH]: 'BCH',
+  [CoinType.DOGECOIN]: 'DOGE',
+  [CoinType.SOLANA]: 'SOL',
+  [CoinType.POLYGON]: 'MATIC',
+  [CoinType.BINANCE_COIN]: 'BNB',
+  [CoinType.TRON]: 'TRX'
+};
+
+// Extension to get symbol from CoinType
+export function getCoinSymbol(coinType: CoinType): string {
+  return COIN_SYMBOLS[coinType];
+}
+
+export enum PaymentStatus {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  EXPIRED = 'expired',
+  FAILED = 'failed',
+  NOT_FOUND = 'not_found'
+}
+
 export const COIN_TYPE_MAP: Record<string, CoinType> = {
   'BTC': CoinType.BITCOIN,
   'ETH': CoinType.ETHEREUM,

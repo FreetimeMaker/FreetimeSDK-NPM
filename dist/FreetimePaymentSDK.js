@@ -7,11 +7,15 @@ const Transaction_1 = require("./Transaction");
 const FeeManager_1 = require("./FeeManager");
 const FeeBreakdown_1 = require("./FeeBreakdown");
 const CryptoUtils_1 = require("./CryptoUtils");
+const GameIntegration_1 = require("./GameIntegration");
+const UserWalletConfig_1 = require("./UserWalletConfig");
 class FreetimePaymentSDK {
     constructor() {
         this.wallets = [];
         this.paymentProviders = new Map();
         this.feeManager = new FeeManager_1.FeeManagerImpl();
+        this.gameIntegration = new GameIntegration_1.GameIntegration();
+        this.userWalletManager = new UserWalletConfig_1.UserWalletManager();
         this.initializePaymentProviders();
     }
     initializePaymentProviders() {

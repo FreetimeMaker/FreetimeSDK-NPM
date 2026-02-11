@@ -12,14 +12,20 @@ import { TransactionImpl, TransactionWithFeesImpl } from './Transaction';
 import { FeeManagerImpl } from './FeeManager';
 import { FeeBreakdownImpl } from './FeeBreakdown';
 import { CryptoUtils } from './CryptoUtils';
+import { GameIntegration } from './GameIntegration';
+import { UserWalletManager } from './UserWalletConfig';
 
 export class FreetimePaymentSDK implements IFreetimePaymentSDK {
   private wallets: Wallet[] = [];
   private feeManager: FeeManager;
   private paymentProviders: Map<CoinType, PaymentInterface> = new Map();
+  public gameIntegration: GameIntegration;
+  public userWalletManager: UserWalletManager;
 
   constructor() {
     this.feeManager = new FeeManagerImpl();
+    this.gameIntegration = new GameIntegration();
+    this.userWalletManager = new UserWalletManager();
     this.initializePaymentProviders();
   }
 

@@ -16,6 +16,18 @@ export {
     UsdPaymentDetails, 
     CurrencyConverter 
 } from './UsdPaymentGateway';
+export { 
+    GameIntegration,
+    type Achievement,
+    type PlayerStats,
+    type LeaderboardEntry,
+    type GameSession
+} from './GameIntegration';
+export { 
+    UserWalletManager,
+    type UserWalletConfig,
+    type WalletSelection
+} from './UserWalletConfig';
 
 export * from './types';
 

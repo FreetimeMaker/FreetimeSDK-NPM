@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CurrencyConverter = exports.UsdPaymentDetails = exports.ConfirmedUsdPayment = exports.UsdPaymentRequest = exports.UsdPaymentGateway = exports.UsdPaymentRequestWithWalletSelection = exports.ExternalWalletManager = exports.ExternalWalletApp = exports.CryptoUtils = exports.FeeBreakdownImpl = exports.FeeManagerImpl = exports.TransactionWithFeesImpl = exports.TransactionImpl = exports.WalletImpl = exports.FreetimePaymentSDK = void 0;
+exports.UserWalletManager = exports.GameIntegration = exports.CurrencyConverter = exports.UsdPaymentDetails = exports.ConfirmedUsdPayment = exports.UsdPaymentRequest = exports.UsdPaymentGateway = exports.UsdPaymentRequestWithWalletSelection = exports.ExternalWalletManager = exports.ExternalWalletApp = exports.CryptoUtils = exports.FeeBreakdownImpl = exports.FeeManagerImpl = exports.TransactionWithFeesImpl = exports.TransactionImpl = exports.WalletImpl = exports.FreetimePaymentSDK = void 0;
 var FreetimePaymentSDK_1 = require("./FreetimePaymentSDK");
 Object.defineProperty(exports, "FreetimePaymentSDK", { enumerable: true, get: function () { return FreetimePaymentSDK_1.FreetimePaymentSDK; } });
 var Wallet_1 = require("./Wallet");
@@ -38,6 +38,10 @@ Object.defineProperty(exports, "UsdPaymentRequest", { enumerable: true, get: fun
 Object.defineProperty(exports, "ConfirmedUsdPayment", { enumerable: true, get: function () { return UsdPaymentGateway_1.ConfirmedUsdPayment; } });
 Object.defineProperty(exports, "UsdPaymentDetails", { enumerable: true, get: function () { return UsdPaymentGateway_1.UsdPaymentDetails; } });
 Object.defineProperty(exports, "CurrencyConverter", { enumerable: true, get: function () { return UsdPaymentGateway_1.CurrencyConverter; } });
+var GameIntegration_1 = require("./GameIntegration");
+Object.defineProperty(exports, "GameIntegration", { enumerable: true, get: function () { return GameIntegration_1.GameIntegration; } });
+var UserWalletConfig_1 = require("./UserWalletConfig");
+Object.defineProperty(exports, "UserWalletManager", { enumerable: true, get: function () { return UserWalletConfig_1.UserWalletManager; } });
 __exportStar(require("./types"), exports);
 const FreetimePaymentSDK_2 = require("./FreetimePaymentSDK");
 exports.default = FreetimePaymentSDK_2.FreetimePaymentSDK;

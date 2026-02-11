@@ -4,10 +4,24 @@ A completely self-contained, open-source multi-cryptocurrency payment SDK for No
 
 ## Features
 
+### Payment Features
 - **Multi-Coin Support**: 9 cryptocurrencies including Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Bitcoin Cash (BCH), Dogecoin (DOGE), Solana (SOL), Polygon (MATIC), Binance Coin (BNB), and Tron (TRX)
+- **User Wallet Configuration**: Users can configure their own wallet addresses
+- **Cryptocurrency Selection**: Users can choose which cryptocurrencies to accept
 - **External Wallet Integration**: Support for 25+ popular wallet apps (Trust Wallet, MetaMask, Coinbase, etc.) with deep link generation
 - **Developer Fee System**: Tiered fee structure (0.05% - 0.5%) with app.ncwallet.net-compatible wallets
 - **USD Payment Gateway**: Automatic USD to cryptocurrency conversion with real-time rates
+
+### Gaming Features
+- **Game Integration**: Complete SDK for integrating cryptocurrency payments into games
+- **Player Progress Tracking**: Track player achievements, levels, and statistics
+- **Achievement System**: Built-in achievement system with XP and rewards
+- **Revenue Generation**: Built-in monetization with automatic fee collection
+- **Custom Game Support**: Easy integration framework for custom games
+- **Leaderboards**: Global and game-specific leaderboards
+- **Player Profiles**: Comprehensive player statistics and progress tracking
+
+### Technical Features
 - **Production-Ready**: Enhanced security, health monitoring, and statistics
 - **Fully Self-Contained**: No external dependencies or API calls required
 - **Local Cryptography**: All cryptographic operations performed locally
@@ -148,6 +162,104 @@ console.log('Payment deep link:', deepLink);
 
 // Open wallet app with deep link
 window.open(deepLink);
+
+// Example deep link outputs:
+// Trust Wallet: "trust://send?address=bc1q...&amount=0.001&asset=btc"
+// MetaMask: "metamask://send/?to=0x742d...&value=1000000000000000"
+// Coinbase: "cbwallet://send?address=bc1q...&amount=0.001&currency=BTC"
+```
+
+### 9. User Wallet Configuration
+
+```javascript
+import { 
+  CoinType, 
+  UserWalletManager 
+} from 'freetimesdk';
+
+// Create user wallet manager
+const walletManager = new UserWalletManager();
+
+// Configure user wallets
+const userWallets = new Map([
+  [CoinType.BITCOIN, 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'],
+  [CoinType.ETHEREUM, '0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45'],
+  [CoinType.LITECOIN, 'ltc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh']
+]);
+
+const preferredCoins = [CoinType.BITCOIN, CoinType.ETHEREUM];
+
+// Create user wallet configuration
+const config = walletManager.createUserWalletConfig(
+  userId = 'user-123',
+  walletAddresses = userWallets,
+  preferredCoins = preferredCoins
+);
+
+// Update wallet address
+walletManager.updateUserWalletAddress(
+  userId = 'user-123',
+  coinType = CoinType.BITCOIN,
+  address = 'new-bitcoin-address'
+);
+
+// Get available coins for user
+const availableCoins = walletManager.getAvailableCoins('user-123');
+console.log('Available coins:', availableCoins);
+
+// Get wallet selections
+const selections = walletManager.getWalletSelections('user-123');
+console.log('Wallet selections:', selections);
+```
+
+### 10. Gaming Integration
+
+```javascript
+import { 
+  GameIntegration, 
+  CoinType 
+} from 'freetimesdk';
+import BN from 'bn.js';
+
+// Create game integration
+const gameIntegration = new GameIntegration();
+
+// Create player
+const playerStats = gameIntegration.createPlayer('player-456', 'CryptoGamer');
+
+// Start game session
+const session = gameIntegration.startGameSession('player-456', 'quiz-game');
+
+// End game session with winnings
+const coinsWon = new Map([
+  [CoinType.BITCOIN, new BN('1000')] // 1000 satoshis
+]);
+
+const completedSession = gameIntegration.endGameSession(
+  sessionId = session.id,
+  score = 850,
+  won = true,
+  coinsWon = coinsWon
+);
+
+console.log('Session completed:', {
+  score: completedSession.score,
+  xpEarned: completedSession.xpEarned,
+  achievementsUnlocked: completedSession.achievementsUnlocked
+});
+
+// Get updated player stats
+const updatedStats = gameIntegration.getPlayerStats('player-456');
+console.log('Player stats:', {
+  level: updatedStats.level,
+  totalXP: updatedStats.totalXP,
+  achievements: updatedStats.achievements.length
+});
+
+// Get leaderboard
+const leaderboard = gameIntegration.getLeaderboard();
+console.log('Top 10 players:', leaderboard.slice(0, 10));
+```
 
 // Example deep link outputs:
 // Trust Wallet: "trust://send?address=bc1q...&amount=0.001&asset=btc"
@@ -443,6 +555,16 @@ For support, please open an issue on the GitHub repository or contact the Freeti
 This is the official Node.js port of the Freetime Payment SDK. For the original Android version, visit [FreetimeMaker/FreetimeSDK](https://github.com/FreetimeMaker/FreetimeSDK).
 
 ## Changelog
+
+### v1.0.6 (February 11, 2026)
+- 🎮 **NEW**: Gaming Integration with achievement system and leaderboards
+- 👤 **NEW**: User Wallet Configuration for personalized wallet management
+- 🏆 **NEW**: Player Progress Tracking with XP and levels
+- 📊 **NEW**: Game Session Management with cryptocurrency rewards
+- 🔧 **UPDATE**: Updated dependencies to latest versions (Ethers v6.16.0, TypeScript 5.6.0)
+- 📱 **ALIGNMENT**: Feature parity with Android SDK v1.0.6
+- 🎯 **ENHANCEMENT**: Improved achievement system with coin rewards
+- 🛠️ **TECHNICAL**: Updated to modern development toolchain
 
 ### v1.0.3 (February 9, 2026)
 - ✨ **NEW**: External Wallet Integration with 25+ wallet apps

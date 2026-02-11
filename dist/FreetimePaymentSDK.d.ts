@@ -1,8 +1,12 @@
 import { CoinType, Wallet, TransactionWithFees, FeeManager, FreetimePaymentSDK as IFreetimePaymentSDK } from './types';
+import { GameIntegration } from './GameIntegration';
+import { UserWalletManager } from './UserWalletConfig';
 export declare class FreetimePaymentSDK implements IFreetimePaymentSDK {
     private wallets;
     private feeManager;
     private paymentProviders;
+    gameIntegration: GameIntegration;
+    userWalletManager: UserWalletManager;
     constructor();
     private initializePaymentProviders;
     createWallet(coinType: CoinType, name?: string): Wallet;

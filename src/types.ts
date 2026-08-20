@@ -7,7 +7,31 @@ export enum CoinType {
   SOLANA = 'SOL',
   POLYGON = 'MATIC',
   BINANCE_COIN = 'BNB',
-  TRON = 'TRX'
+  TRON = 'TRX',
+  ALGORAND = 'ALGO',
+  APTOS = 'APT',
+  ARBITRUM = 'ARB',
+  AVALANCHE = 'AVAX',
+  BASE = 'BASE',
+  CARDANO = 'ADA',
+  CELO = 'CELO',
+  COSMOS = 'ATOM',
+  DASH = 'DASH',
+  FANTOM = 'FTM',
+  HEDERA = 'HBAR',
+  MONERO = 'XMR',
+  MULTIVERSX = 'EGLD',
+  NANO = 'XNO',
+  NEAR = 'NEAR',
+  OPTIMISM = 'OP',
+  POLKADOT = 'DOT',
+  STELLAR = 'XLM',
+  SUI = 'SUI',
+  TEZOS = 'XTZ',
+  VECHAIN = 'VET',
+  XRP = 'XRP',
+  ZCASH = 'ZEC',
+  REVENUE_CAT = 'RCAT'
 }
 
 // Add symbol mapping for CoinType
@@ -20,7 +44,31 @@ export const COIN_SYMBOLS: Record<CoinType, string> = {
   [CoinType.SOLANA]: 'SOL',
   [CoinType.POLYGON]: 'MATIC',
   [CoinType.BINANCE_COIN]: 'BNB',
-  [CoinType.TRON]: 'TRX'
+  [CoinType.TRON]: 'TRX',
+  [CoinType.ALGORAND]: 'ALGO',
+  [CoinType.APTOS]: 'APT',
+  [CoinType.ARBITRUM]: 'ARB',
+  [CoinType.AVALANCHE]: 'AVAX',
+  [CoinType.BASE]: 'BASE',
+  [CoinType.CARDANO]: 'ADA',
+  [CoinType.CELO]: 'CELO',
+  [CoinType.COSMOS]: 'ATOM',
+  [CoinType.DASH]: 'DASH',
+  [CoinType.FANTOM]: 'FTM',
+  [CoinType.HEDERA]: 'HBAR',
+  [CoinType.MONERO]: 'XMR',
+  [CoinType.MULTIVERSX]: 'EGLD',
+  [CoinType.NANO]: 'XNO',
+  [CoinType.NEAR]: 'NEAR',
+  [CoinType.OPTIMISM]: 'OP',
+  [CoinType.POLKADOT]: 'DOT',
+  [CoinType.STELLAR]: 'XLM',
+  [CoinType.SUI]: 'SUI',
+  [CoinType.TEZOS]: 'XTZ',
+  [CoinType.VECHAIN]: 'VET',
+  [CoinType.XRP]: 'XRP',
+  [CoinType.ZCASH]: 'ZEC',
+  [CoinType.REVENUE_CAT]: 'RCAT'
 };
 
 // Extension to get symbol from CoinType
@@ -30,6 +78,7 @@ export function getCoinSymbol(coinType: CoinType): string {
 
 export enum PaymentStatus {
   PENDING = 'pending',
+  QUEUED = 'queued',
   CONFIRMED = 'confirmed',
   EXPIRED = 'expired',
   FAILED = 'failed',
@@ -45,8 +94,60 @@ export const COIN_TYPE_MAP: Record<string, CoinType> = {
   'SOL': CoinType.SOLANA,
   'MATIC': CoinType.POLYGON,
   'BNB': CoinType.BINANCE_COIN,
-  'TRX': CoinType.TRON
+  'TRX': CoinType.TRON,
+  'ALGO': CoinType.ALGORAND,
+  'APT': CoinType.APTOS,
+  'ARB': CoinType.ARBITRUM,
+  'AVAX': CoinType.AVALANCHE,
+  'BASE': CoinType.BASE,
+  'ADA': CoinType.CARDANO,
+  'CELO': CoinType.CELO,
+  'ATOM': CoinType.COSMOS,
+  'DASH': CoinType.DASH,
+  'FTM': CoinType.FANTOM,
+  'HBAR': CoinType.HEDERA,
+  'XMR': CoinType.MONERO,
+  'EGLD': CoinType.MULTIVERSX,
+  'XNO': CoinType.NANO,
+  'NEAR': CoinType.NEAR,
+  'OP': CoinType.OPTIMISM,
+  'DOT': CoinType.POLKADOT,
+  'XLM': CoinType.STELLAR,
+  'SUI': CoinType.SUI,
+  'XTZ': CoinType.TEZOS,
+  'VET': CoinType.VECHAIN,
+  'XRP': CoinType.XRP,
+  'ZEC': CoinType.ZCASH,
+  'RCAT': CoinType.REVENUE_CAT
 };
+
+/**
+ * Configuration for the SDK (Aligned with Android DeveloperConfig).
+ */
+export interface DeveloperConfig {
+  developerId: string;
+  enablePromotions?: boolean;
+  customPromotionUrl?: string | null;
+  hideDefaultPromotions?: boolean;
+}
+
+/**
+ * Payment request details (Aligned with Android PaymentRequest).
+ */
+export interface PaymentRequest {
+  amount: number;
+  currency: string;
+  description: string;
+  metadata?: Map<string, string>;
+}
+
+/**
+ * Payment result (Aligned with Android PaymentResult).
+ */
+export type PaymentResult =
+  | { type: 'success'; transactionId: string; amount: number }
+  | { type: 'error'; message: string; code?: string }
+  | { type: 'cancelled' };
 
 export interface Wallet {
   address: string;

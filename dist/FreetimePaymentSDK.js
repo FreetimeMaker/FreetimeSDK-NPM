@@ -9,6 +9,8 @@ const FeeBreakdown_1 = require("./FeeBreakdown");
 const CryptoUtils_1 = require("./CryptoUtils");
 const GameIntegration_1 = require("./GameIntegration");
 const UserWalletConfig_1 = require("./UserWalletConfig");
+const HealthMonitor_1 = require("./HealthMonitor");
+const StatisticsManager_1 = require("./StatisticsManager");
 class FreetimePaymentSDK {
     constructor() {
         this.wallets = [];
@@ -16,7 +18,10 @@ class FreetimePaymentSDK {
         this.feeManager = new FeeManager_1.FeeManagerImpl();
         this.gameIntegration = new GameIntegration_1.GameIntegration();
         this.userWalletManager = new UserWalletConfig_1.UserWalletManager();
+        this.healthMonitor = new HealthMonitor_1.HealthMonitor();
+        this.statisticsManager = new StatisticsManager_1.StatisticsManager();
         this.initializePaymentProviders();
+        this.healthMonitor.startPassiveMonitoring();
     }
     initializePaymentProviders() {
         for (const coinType of Object.values(types_1.CoinType)) {
@@ -72,6 +77,12 @@ class FreetimePaymentSDK {
     }
     getFeeManager() {
         return this.feeManager;
+    }
+    getHealthMonitor() {
+        return this.healthMonitor;
+    }
+    getStatisticsManager() {
+        return this.statisticsManager;
     }
     getAllWallets() {
         return [...this.wallets];

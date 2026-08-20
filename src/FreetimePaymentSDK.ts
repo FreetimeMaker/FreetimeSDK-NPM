@@ -14,6 +14,9 @@ import { FeeBreakdownImpl } from './FeeBreakdown';
 import { CryptoUtils } from './CryptoUtils';
 import { GameIntegration } from './GameIntegration';
 import { UserWalletManager } from './UserWalletConfig';
+import { HealthMonitor } from './HealthMonitor';
+import { StatisticsManager } from './StatisticsManager';
+import { TransactionQueue } from './TransactionQueue';
 
 export class FreetimePaymentSDK implements IFreetimePaymentSDK {
   private wallets: Wallet[] = [];
@@ -21,12 +24,19 @@ export class FreetimePaymentSDK implements IFreetimePaymentSDK {
   private paymentProviders: Map<CoinType, PaymentInterface> = new Map();
   public gameIntegration: GameIntegration;
   public userWalletManager: UserWalletManager;
+  private healthMonitor: HealthMonitor;
+  private statisticsManager: StatisticsManager;
+  private transactionQueue: TransactionQueue;
 
   constructor() {
     this.feeManager = new FeeManagerImpl();
     this.gameIntegration = new GameIntegration();
     this.userWalletManager = new UserWalletManager();
+    this.healthMonitor = new HealthMonitor();
+    this.statisticsManager = new StatisticsManager();
+    this.transactionQueue = new TransactionQueue();
     this.initializePaymentProviders();
+    this.healthMonitor.startPassiveMonitoring();
   }
 
   private initializePaymentProviders(): void {
@@ -101,7 +111,7 @@ export class FreetimePaymentSDK implements IFreetimePaymentSDK {
       coinType
     );
 
-    return new TransactionWithFeesImpl(transaction, feeBreakdown);
+    return new TransactionWithFeesImpl(transaction, feeBreakdown, this.transactionQueue);
   }
 
   async getFeeEstimate(
@@ -124,6 +134,18 @@ export class FreetimePaymentSDK implements IFreetimePaymentSDK {
 
   getFeeManager(): FeeManager {
     return this.feeManager;
+  }
+
+  getHealthMonitor(): HealthMonitor {
+    return this.healthMonitor;
+  }
+
+  getStatisticsManager(): StatisticsManager {
+    return this.statisticsManager;
+  }
+
+  getTransactionQueue(): TransactionQueue {
+    return this.transactionQueue;
   }
 
   getAllWallets(): Wallet[] {

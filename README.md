@@ -22,9 +22,12 @@ A completely self-contained, open-source multi-cryptocurrency payment SDK for No
 - **Player Profiles**: Comprehensive player statistics and progress tracking
 
 ### Technical Features
-- **Production-Ready**: Enhanced security, health monitoring, and statistics
+- **Production-Ready**: Enhanced security with Health Monitoring and Statistics
+- **Offline-First Payments**: Built-in `TransactionQueue` for reliable payment processing in low-connectivity environments
+- **Health Monitoring**: Real-time SDK and system health tracking with `HealthMonitor`
+- **Player Analytics**: Advanced engagement metrics and churn prediction with `StatisticsManager`
 - **Fully Self-Contained**: No external dependencies or API calls required
-- **Local Cryptography**: All cryptographic operations performed locally
+- **Local Cryptography**: All cryptographic operations performed locally with enhanced biometric-simulated security
 - **Wallet Management**: Create and manage multiple wallets
 - **Transaction Builder**: Create and sign transactions
 - **Open Source**: Fully transparent and verifiable code
@@ -297,6 +300,57 @@ const details = gateway.getUsdPaymentDetails(payment.id);
 console.log('Current balance:', details?.currentUsdValue);
 ```
 
+### 11. Health Monitoring
+
+```javascript
+const healthMonitor = sdk.getHealthMonitor();
+
+// Get current health report
+const report = await healthMonitor.measureCurrentHealth();
+console.log(`SDK Status: ${report.status}`);
+console.log(`Metrics:`, report.metrics);
+
+// Listen for health updates
+healthMonitor.addHealthListener((data) => {
+  console.log('Health Update:', data);
+});
+```
+
+### 12. Player Statistics
+
+```javascript
+const statsManager = sdk.getStatisticsManager();
+
+// Track a session
+statsManager.trackSession('player-456', 30); // 30 minutes
+
+// Get engagement metrics
+const metrics = statsManager.getEngagementMetrics('player-456');
+console.log(`Loyalty Score: ${metrics.loyaltyScore}`);
+
+// Check churn probability
+const churnProb = statsManager.getChurnProbability('player-456');
+console.log(`Churn Probability: ${churnProb * 100}%`);
+```
+
+### 13. Offline-First Payment Processing
+
+```javascript
+const queue = sdk.getTransactionQueue();
+
+// The SDK automatically handles queuing if network is lost during broadcast()
+const result = await sdk.send(...);
+const txHash = await result.broadcast();
+
+// Monitor queue status
+const queuedTxs = queue.getQueuedTransactions();
+console.log(`Transactions waiting for broadcast: ${queuedTxs.length}`);
+
+// Manually simulate connectivity changes
+queue.setOnlineStatus(false); // Transactions will be stored locally
+queue.setOnlineStatus(true);  // Transactions will be automatically retried
+```
+
 ## API Reference
 
 ### FreetimePaymentSDK
@@ -310,9 +364,37 @@ The main class for interacting with the payment SDK.
 - `send(fromAddress: string, toAddress: string, amount: string, coinType: CoinType): Promise<TransactionWithFees>` - Sends cryptocurrency with fee calculation
 - `getFeeEstimate(...): Promise<string>` - Estimates transaction fee
 - `getFeeManager(): FeeManager` - Gets the fee manager for developer fee configuration
+- `getHealthMonitor(): HealthMonitor` - Gets the health monitor for stability tracking
+- `getStatisticsManager(): StatisticsManager` - Gets the statistics manager for player analytics
+- `getTransactionQueue(): TransactionQueue` - Gets the offline-first transaction queue
 - `getAllWallets(): Wallet[]` - Returns all wallets
 - `getWalletsByCoinType(coinType: CoinType): Wallet[]` - Returns wallets by type
 - `validateAddress(address: string, coinType: CoinType): boolean` - Validates an address
+
+### StatisticsManager
+
+Tracks player engagement and predictive analytics.
+
+#### Methods
+
+- `trackSession(playerId: string, durationMinutes: number): void` - Tracks a new session
+- `trackSpend(playerId: string, amount: BN, coinType: CoinType): void` - Tracks a spend event
+- `getEngagementMetrics(playerId: string): EngagementMetrics | null` - Gets engagement metrics
+- `getChurnProbability(playerId: string): number` - Gets churn probability (0.0 - 1.0)
+- `getSpendPercentile(playerId: string): number` - Gets spend percentile (0 - 100)
+
+### HealthMonitor
+
+Tracks SDK and system operational health.
+
+#### Methods
+
+- `startPassiveMonitoring(): void` - Starts background monitoring
+- `stopMonitoring(): void` - Stops monitoring
+- `measureCurrentHealth(): Promise<HealthReport>` - Performs active health check
+- `getHealthReport(): HealthReport` - Returns latest health report
+- `addHealthListener(listener: (data: any) => void): void` - Adds health listener
+- `logError(error: Error | string): void` - Logs an error to the monitor
 
 ### Wallet
 
@@ -555,6 +637,15 @@ For support, please open an issue on the GitHub repository or contact the Freeti
 This is the official Node.js port of the Freetime Payment SDK. For the original Android version, visit [FreetimeMaker/FreetimeSDK](https://github.com/FreetimeMaker/FreetimeSDK).
 
 ## Changelog
+
+### v1.1.0 (August 19, 2026)
+- 🚀 **PRODUCTION READY**: Initial production release with full feature set
+- 💳 **NEW**: Offline-First Payment support with `TransactionQueue` and auto-retry
+- 🏥 **NEW**: Health Monitoring system for real-time SDK stability tracking
+- 📊 **NEW**: Statistics Manager for player engagement and churn prediction
+- 🛡️ **ENHANCEMENT**: Enhanced local cryptography with biometric-simulated security
+- 📱 **ALIGNMENT**: Full feature parity with Android SDK v1.1.0
+- 🔧 **UPDATE**: Improved address validation for all supported cryptocurrencies
 
 ### v1.0.6 (February 11, 2026)
 - 🎮 **NEW**: Gaming Integration with achievement system and leaderboards

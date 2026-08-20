@@ -4,6 +4,8 @@ export { TransactionImpl, TransactionWithFeesImpl } from './Transaction';
 export { FeeManagerImpl } from './FeeManager';
 export { FeeBreakdownImpl } from './FeeBreakdown';
 export { CryptoUtils } from './CryptoUtils';
+export { HealthMonitor, type HealthReport } from './HealthMonitor';
+export { StatisticsManager, type DetailedPlayerStats, type EngagementMetrics } from './StatisticsManager';
 export { ExternalWalletApp, ExternalWalletManager, UsdPaymentRequestWithWalletSelection } from './ExternalWalletIntegration';
 export { UsdPaymentGateway, UsdPaymentRequest, ConfirmedUsdPayment, UsdPaymentDetails, CurrencyConverter } from './UsdPaymentGateway';
 export { GameIntegration, type Achievement, type PlayerStats, type LeaderboardEntry, type GameSession } from './GameIntegration';

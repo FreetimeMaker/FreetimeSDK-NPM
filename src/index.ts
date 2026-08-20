@@ -4,7 +4,10 @@ export { TransactionImpl, TransactionWithFeesImpl } from './Transaction';
 export { FeeManagerImpl } from './FeeManager';
 export { FeeBreakdownImpl } from './FeeBreakdown';
 export { CryptoUtils } from './CryptoUtils';
-export { 
+export { HealthMonitor, type HealthReport } from './HealthMonitor';
+export { StatisticsManager, type DetailedPlayerStats, type EngagementMetrics } from './StatisticsManager';
+export { TransactionQueue, type QueuedTransaction } from './TransactionQueue';
+export {
     ExternalWalletApp, 
     ExternalWalletManager, 
     UsdPaymentRequestWithWalletSelection 

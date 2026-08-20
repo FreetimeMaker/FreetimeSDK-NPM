@@ -1,5 +1,6 @@
-import { CoinType, Transaction, TransactionWithFees, FeeBreakdown } from './types';
+import { CoinType, Transaction, TransactionWithFees, FeeBreakdown, PaymentStatus } from './types';
 import { FeeBreakdownImpl } from './FeeBreakdown';
+import { TransactionQueue } from './TransactionQueue';
 
 export class TransactionImpl implements Transaction {
   constructor(
@@ -17,17 +18,20 @@ export class TransactionImpl implements Transaction {
 export class TransactionWithFeesImpl implements TransactionWithFees {
   constructor(
     public transaction: Transaction,
-    public feeBreakdown: FeeBreakdown
+    public feeBreakdown: FeeBreakdown,
+    private queue?: TransactionQueue
   ) {}
 
   async broadcast(): Promise<string> {
+    if (this.queue) {
+      this.queue.enqueue(this.transaction);
+      return this.transaction.hash;
+    }
+
+    // Legacy fallback
     this.transaction.status = 'pending';
-    
     console.log(`Broadcasting transaction: ${this.transaction.hash}`);
-    console.log(this.feeBreakdown.getFormattedBreakdown());
-    
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
     this.transaction.status = 'confirmed';
     return this.transaction.hash;
   }

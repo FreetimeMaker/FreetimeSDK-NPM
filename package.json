@@ -23,9 +23,6 @@
         "ethereum",
         "payment",
         "sdk",
-        "blockchain",
-        "wallet",
-        "transaction",
         "btc",
         "eth",
         "ltc",
@@ -52,12 +49,6 @@
         "LICENSE"
     ],
     "dependencies": {
-        "bech32": "^2.0.0",
-        "bn.js": "5.2.3",
-        "bs58": "^6.0.0",
-        "crypto-js": "^4.2.0",
-        "elliptic": "^6.5.4",
-        "ethers": "^6.16.0"
     },
     "devDependencies": {
         "@types/elliptic": "^6.4.18",

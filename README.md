@@ -1,36 +1,16 @@
-# Freetime Payment SDK - Node.js
+# Freetime Multi-Provider Payment SDK - Node.js
 
-A completely self-contained, open-source multi-cryptocurrency payment SDK for Node.js and browsers, ported from the original Android SDK.
+A Node.js version of the FreetimeSDK Android SDK - a multi-provider payment SDK that enables integration of real payment providers without relying on proprietary binary blobs. Fully open-source, serverless, and ideal for F-Droid-friendly applications.
 
 ## Features
 
-### Payment Features
-- **Multi-Coin Support**: 9 cryptocurrencies including Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Bitcoin Cash (BCH), Dogecoin (DOGE), Solana (SOL), Polygon (MATIC), Binance Coin (BNB), and Tron (TRX)
-- **User Wallet Configuration**: Users can configure their own wallet addresses
-- **Cryptocurrency Selection**: Users can choose which cryptocurrencies to accept
-- **External Wallet Integration**: Support for 25+ popular wallet apps (Trust Wallet, MetaMask, Coinbase, etc.) with deep link generation
-- **Developer Fee System**: Tiered fee structure (0.05% - 0.5%) with app.ncwallet.net-compatible wallets
-- **USD Payment Gateway**: Automatic USD to cryptocurrency conversion with real-time rates
-
-### Gaming Features
-- **Game Integration**: Complete SDK for integrating cryptocurrency payments into games
-- **Player Progress Tracking**: Track player achievements, levels, and statistics
-- **Achievement System**: Built-in achievement system with XP and rewards
-- **Revenue Generation**: Built-in monetization with automatic fee collection
-- **Custom Game Support**: Easy integration framework for custom games
-- **Leaderboards**: Global and game-specific leaderboards
-- **Player Profiles**: Comprehensive player statistics and progress tracking
-
-### Technical Features
-- **Production-Ready**: Enhanced security with Health Monitoring and Statistics
-- **Offline-First Payments**: Built-in `TransactionQueue` for reliable payment processing in low-connectivity environments
-- **Health Monitoring**: Real-time SDK and system health tracking with `HealthMonitor`
-- **Player Analytics**: Advanced engagement metrics and churn prediction with `StatisticsManager`
-- **Fully Self-Contained**: No external dependencies or API calls required
-- **Local Cryptography**: All cryptographic operations performed locally with enhanced biometric-simulated security
-- **Wallet Management**: Create and manage multiple wallets
-- **Transaction Builder**: Create and sign transactions
-- **Open Source**: Fully transparent and verifiable code
+- **F-Droid Friendly**: No proprietary SDKs. Uses URI schemes and web flows.
+- **Serverless**: Designed to work without any backend infrastructure.
+- **Promotion System**: Display "Featured Projects" anywhere in your app. Privacy-friendly and fully configurable.
+- **Real Providers**: Supports a wide range of Cryptocurrencies.
+- **Crypto-Ready**: Native support for 30+ major cryptocurrencies and Layer 2s (BTC, ETH, SOL, OP, ARB, BASE, etc.).
+- **Cross-Platform**: Works in Node.js and browser environments.
+- **TypeScript**: Fully typed for excellent developer experience.
 
 ## Installation
 
@@ -40,636 +20,256 @@ npm install freetimesdk
 
 ## Quick Start
 
-### 1. Initialize SDK
+### 1. Configuration
 
-```javascript
-import { FreetimePaymentSDK, CoinType } from 'freetimesdk';
+```typescript
+import { FreetimePay, DeveloperConfig } from 'freetimesdk';
 
-const sdk = new FreetimePaymentSDK();
+const config = new DeveloperConfig('your_developer_id');
+const sdk = new FreetimePay(config);
 ```
 
-### 2. Create Wallet
+### 2. Register Providers
 
-```javascript
-// Create Bitcoin wallet
-const bitcoinWallet = sdk.createWallet(CoinType.BITCOIN, 'My Bitcoin Wallet');
+#### Batch Registration for Crypto
 
-// Create Ethereum wallet
-const ethereumWallet = sdk.createWallet(CoinType.ETHEREUM, 'My Ethereum Wallet');
+The easiest way to register all supported cryptocurrencies is using a map of your addresses:
 
-// Create Litecoin wallet
-const litecoinWallet = sdk.createWallet(CoinType.LITECOIN, 'My Litecoin Wallet');
+```typescript
+const addresses = {
+    'BTC': '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+    'ETH': '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
+    'SOL': '7p2...',
+    'XMR': '44AFFq...',
+    // ... add any other addresses for the tokens you wish to support
+};
+
+sdk.registerDefaultCryptoProviders(addresses);
 ```
 
-### 3. Check Balance
+#### Manual Registration
 
-```javascript
-const balance = await sdk.getBalance(bitcoinWallet.address);
-console.log(`Bitcoin balance: ${balance} BTC`);
+You can still register providers individually if needed:
+
+```typescript
+import { BitcoinProvider, EthereumProvider } from 'freetimesdk';
+
+sdk.registerProvider(new BitcoinProvider('BTC_ADDRESS'));
+sdk.registerProvider(new EthereumProvider('ETH_ADDRESS'));
 ```
 
-### 4. Send Cryptocurrency
+### 3. Start Payment (CLI)
 
-```javascript
-const amount = '0.001';
-const recipientAddress = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa';
+```typescript
+import { PaymentRequest, PaymentSelectionCLI } from 'freetimesdk';
 
-const result = await sdk.send(
-  fromAddress = bitcoinWallet.address,
-  toAddress = recipientAddress,
-  amount = amount,
-  coinType = CoinType.BITCOIN
+const request = new PaymentRequest(
+    5.0,
+    'USD',
+    'Premium Support'
 );
 
-// Display fee breakdown
-console.log(result.feeBreakdown.getFormattedBreakdown());
+const paymentCLI = new PaymentSelectionCLI(sdk);
+const result = await paymentCLI.showPaymentSelection(request);
 
-// Broadcast the transaction
-const txHash = await result.broadcast();
-console.log(`Transaction sent: ${txHash}`);
+if (result instanceof PaymentResultSuccess) {
+    console.log(`Success! Transaction ID: ${result.transactionId}`);
+} else if (result instanceof PaymentResultError) {
+    console.log(`Error: ${result.message}`);
+} else if (result instanceof PaymentResultCancelled) {
+    console.log('User cancelled');
+}
 ```
 
-### 5. Fee Estimation
+### 4. Start Payment (Programmatic)
 
-```javascript
-const fee = await sdk.getFeeEstimate(
-  fromAddress = bitcoinWallet.address,
-  toAddress = recipientAddress,
-  amount = amount,
-  coinType = CoinType.BITCOIN
+```typescript
+import { PaymentRequest } from 'freetimesdk';
+
+const request = new PaymentRequest(
+    5.0,
+    'USD',
+    'Premium Support'
 );
 
-console.log(`Estimated fee: ${fee} BTC`);
-```
-
-### 6. Send Cryptocurrency with Developer Fees
-
-```javascript
-// Send cryptocurrency with automatic fee calculation
-const result = await sdk.send(
-  fromAddress = bitcoinWallet.address,
-  toAddress = recipientAddress,
-  amount = '0.1',
-  coinType = CoinType.BITCOIN
-);
-
-// Display fee breakdown
-console.log(result.feeBreakdown.getFormattedBreakdown());
-
-/* Transaction Fee Breakdown (BTC):
-Original Amount: 0.10000000 BTC
-Network Fee: 0.00000100 BTC
-Developer Fee (0.5%): 0.00050000 BTC
-Total Fee: 0.00050100 BTC
-Recipient Receives: 0.09949900 BTC
-Developer Wallet: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
-*/
-
-// Broadcast the transaction
-const txHash = await result.broadcast();
-console.log(`Transaction sent: ${txHash}`);
-```
-
-### 7. External Wallet Integration
-
-```javascript
-import { 
-  UsdPaymentGateway, 
-  ExternalWalletApp, 
-  CoinType 
-} from 'freetimesdk';
-
-// Create USD Payment Gateway with external wallet support
-const gateway = new UsdPaymentGateway(
-  merchantWalletAddress: 'your-merchant-address',
-  merchantCoinType: CoinType.BITCOIN
-);
-
-// Create payment with wallet selection
-const paymentWithWallets = await gateway.createUsdPaymentWithWalletSelection(
-  usdAmount: new BN(10000), // $100.00 USD (in cents)
-  customerReference: 'order-123',
-  description: 'Payment for goods'
-);
-
-// Get available wallet apps
-const availableWallets = paymentWithWallets.availableWalletApps;
-console.log('Available wallets:', availableWallets.map(w => w.name));
-
-// Select a wallet (e.g., Trust Wallet)
-const selectedPayment = paymentWithWallets.selectWallet(ExternalWalletApp.TRUST_WALLET);
-
-// Generate deep link for payment
-const deepLink = selectedPayment.getPaymentDeepLink();
-console.log('Payment deep link:', deepLink);
-
-// Open wallet app with deep link
-window.open(deepLink);
-
-// Example deep link outputs:
-// Trust Wallet: "trust://send?address=bc1q...&amount=0.001&asset=btc"
-// MetaMask: "metamask://send/?to=0x742d...&value=1000000000000000"
-// Coinbase: "cbwallet://send?address=bc1q...&amount=0.001&currency=BTC"
-```
-
-### 9. User Wallet Configuration
-
-```javascript
-import { 
-  CoinType, 
-  UserWalletManager 
-} from 'freetimesdk';
-
-// Create user wallet manager
-const walletManager = new UserWalletManager();
-
-// Configure user wallets
-const userWallets = new Map([
-  [CoinType.BITCOIN, 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'],
-  [CoinType.ETHEREUM, '0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45'],
-  [CoinType.LITECOIN, 'ltc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh']
-]);
-
-const preferredCoins = [CoinType.BITCOIN, CoinType.ETHEREUM];
-
-// Create user wallet configuration
-const config = walletManager.createUserWalletConfig(
-  userId = 'user-123',
-  walletAddresses = userWallets,
-  preferredCoins = preferredCoins
-);
-
-// Update wallet address
-walletManager.updateUserWalletAddress(
-  userId = 'user-123',
-  coinType = CoinType.BITCOIN,
-  address = 'new-bitcoin-address'
-);
-
-// Get available coins for user
-const availableCoins = walletManager.getAvailableCoins('user-123');
-console.log('Available coins:', availableCoins);
-
-// Get wallet selections
-const selections = walletManager.getWalletSelections('user-123');
-console.log('Wallet selections:', selections);
-```
-
-### 10. Gaming Integration
-
-```javascript
-import { 
-  GameIntegration, 
-  CoinType 
-} from 'freetimesdk';
-import BN from 'bn.js';
-
-// Create game integration
-const gameIntegration = new GameIntegration();
-
-// Create player
-const playerStats = gameIntegration.createPlayer('player-456', 'CryptoGamer');
-
-// Start game session
-const session = gameIntegration.startGameSession('player-456', 'quiz-game');
-
-// End game session with winnings
-const coinsWon = new Map([
-  [CoinType.BITCOIN, new BN('1000')] // 1000 satoshis
-]);
-
-const completedSession = gameIntegration.endGameSession(
-  sessionId = session.id,
-  score = 850,
-  won = true,
-  coinsWon = coinsWon
-);
-
-console.log('Session completed:', {
-  score: completedSession.score,
-  xpEarned: completedSession.xpEarned,
-  achievementsUnlocked: completedSession.achievementsUnlocked
-});
-
-// Get updated player stats
-const updatedStats = gameIntegration.getPlayerStats('player-456');
-console.log('Player stats:', {
-  level: updatedStats.level,
-  totalXP: updatedStats.totalXP,
-  achievements: updatedStats.achievements.length
-});
-
-// Get leaderboard
-const leaderboard = gameIntegration.getLeaderboard();
-console.log('Top 10 players:', leaderboard.slice(0, 10));
-```
-
-// Example deep link outputs:
-// Trust Wallet: "trust://send?address=bc1q...&amount=0.001&asset=btc"
-// MetaMask: "metamask://send/?to=0x742d...&value=1000000000000000"
-// Coinbase: "cbwallet://send?address=bc1q...&amount=0.001&currency=BTC"
-```
-
-### 8. USD Payment Gateway
-
-```javascript
-import { UsdPaymentGateway, CoinType } from 'freetimesdk';
-import BN from 'bn.js';
-
-const gateway = new UsdPaymentGateway(
-  'merchant-bitcoin-address',
-  CoinType.BITCOIN
-);
-
-// Create USD payment request
-const payment = await gateway.createUsdPaymentRequest(
-  new BN(5000), // $50.00 USD
-  'customer-123',
-  'Monthly subscription'
-);
-
-console.log(payment.getFormattedInfo());
-// Output: "$50.00 USD = 0.00215000 BTC (Rate: $23255.81)"
-
-// Check payment status
-const status = await gateway.checkUsdPaymentStatus(payment.id);
-console.log('Payment status:', status);
-
-// Get payment details
-const details = gateway.getUsdPaymentDetails(payment.id);
-console.log('Current balance:', details?.currentUsdValue);
-```
-
-### 11. Health Monitoring
-
-```javascript
-const healthMonitor = sdk.getHealthMonitor();
-
-// Get current health report
-const report = await healthMonitor.measureCurrentHealth();
-console.log(`SDK Status: ${report.status}`);
-console.log(`Metrics:`, report.metrics);
-
-// Listen for health updates
-healthMonitor.addHealthListener((data) => {
-  console.log('Health Update:', data);
+sdk.processPayment('Bitcoin (BTC)', request, (result) => {
+    if (result instanceof PaymentResultSuccess) {
+        console.log(`Success! Transaction ID: ${result.transactionId}`);
+    } else if (result instanceof PaymentResultError) {
+        console.log(`Error: ${result.message}`);
+    } else if (result instanceof PaymentResultCancelled) {
+        console.log('User cancelled');
+    }
 });
 ```
 
-### 12. Player Statistics
+## Promotion System
 
-```javascript
-const statsManager = sdk.getStatisticsManager();
+The SDK includes a flexible promotion system to monetize your app ethically.
 
-// Track a session
-statsManager.trackSession('player-456', 30); // 30 minutes
+### Default Behavior
 
-// Get engagement metrics
-const metrics = statsManager.getEngagementMetrics('player-456');
-console.log(`Loyalty Score: ${metrics.loyaltyScore}`);
+By default, promotions are shown at the bottom of the payment selection interface.
 
-// Check churn probability
-const churnProb = statsManager.getChurnProbability('player-456');
-console.log(`Churn Probability: ${churnProb * 100}%`);
+### Custom Promotion URL
+
+Developers can provide their own JSON list of promotions:
+
+```typescript
+const config = new DeveloperConfig(
+    'your_developer_id',
+    true, // enable promotions
+    'https://your-server.com/promotions.json' // custom promotion URL
+);
 ```
 
-### 13. Offline-First Payment Processing
+### Opt-out
 
-```javascript
-const queue = sdk.getTransactionQueue();
+You can disable promotions entirely:
 
-// The SDK automatically handles queuing if network is lost during broadcast()
-const result = await sdk.send(...);
-const txHash = await result.broadcast();
-
-// Monitor queue status
-const queuedTxs = queue.getQueuedTransactions();
-console.log(`Transactions waiting for broadcast: ${queuedTxs.length}`);
-
-// Manually simulate connectivity changes
-queue.setOnlineStatus(false); // Transactions will be stored locally
-queue.setOnlineStatus(true);  // Transactions will be automatically retried
+```typescript
+const config = new DeveloperConfig(
+    'your_developer_id',
+    false // disable promotions
+);
 ```
+
+### Promotion JSON Format
+
+```json
+{
+  "version": 1,
+  "promotions": [
+    {
+      "id": "promo_1",
+      "title": "Featured App",
+      "description": "Check out this amazing app!",
+      "iconUrl": "https://example.com/icon.png",
+      "targetUrl": "https://example.com"
+    }
+  ]
+}
+```
+
+## Supported Providers
+
+### Cryptocurrencies
+
+Comprehensive support for 32 major assets and networks:
+
+**Legacy/Major**: BTC, ETH, DOGE, LTC, BCH, TRX, XLM, DASH, ZEC, XMR, XRP
+
+**High Performance L1s**: SOL, ADA, DOT, ALGO, ATOM, NEAR, EGLD, HBAR, APT, SUI, VET, XTZ
+
+**Layer 2s & EVMs**: OP, ARB, BASE, CELO, AVAX, MATIC, FTM
+
+**Exchange/Native**: BNB, XNO
 
 ## API Reference
 
-### FreetimePaymentSDK
+### FreetimePay
 
-The main class for interacting with the payment SDK.
-
-#### Methods
-
-- `createWallet(coinType: CoinType, name?: string): Wallet` - Creates a new wallet
-- `getBalance(address: string): Promise<string>` - Gets the balance of an address
-- `send(fromAddress: string, toAddress: string, amount: string, coinType: CoinType): Promise<TransactionWithFees>` - Sends cryptocurrency with fee calculation
-- `getFeeEstimate(...): Promise<string>` - Estimates transaction fee
-- `getFeeManager(): FeeManager` - Gets the fee manager for developer fee configuration
-- `getHealthMonitor(): HealthMonitor` - Gets the health monitor for stability tracking
-- `getStatisticsManager(): StatisticsManager` - Gets the statistics manager for player analytics
-- `getTransactionQueue(): TransactionQueue` - Gets the offline-first transaction queue
-- `getAllWallets(): Wallet[]` - Returns all wallets
-- `getWalletsByCoinType(coinType: CoinType): Wallet[]` - Returns wallets by type
-- `validateAddress(address: string, coinType: CoinType): boolean` - Validates an address
-
-### StatisticsManager
-
-Tracks player engagement and predictive analytics.
-
-#### Methods
-
-- `trackSession(playerId: string, durationMinutes: number): void` - Tracks a new session
-- `trackSpend(playerId: string, amount: BN, coinType: CoinType): void` - Tracks a spend event
-- `getEngagementMetrics(playerId: string): EngagementMetrics | null` - Gets engagement metrics
-- `getChurnProbability(playerId: string): number` - Gets churn probability (0.0 - 1.0)
-- `getSpendPercentile(playerId: string): number` - Gets spend percentile (0 - 100)
-
-### HealthMonitor
-
-Tracks SDK and system operational health.
-
-#### Methods
-
-- `startPassiveMonitoring(): void` - Starts background monitoring
-- `stopMonitoring(): void` - Stops monitoring
-- `measureCurrentHealth(): Promise<HealthReport>` - Performs active health check
-- `getHealthReport(): HealthReport` - Returns latest health report
-- `addHealthListener(listener: (data: any) => void): void` - Adds health listener
-- `logError(error: Error | string): void` - Logs an error to the monitor
-
-### Wallet
-
-Represents a cryptocurrency wallet.
-
-#### Properties
-
-- `address: string` - The wallet address
-- `coinType: CoinType` - The cryptocurrency type
-- `publicKey: string` - The public key
-- `privateKey: string` - The private key (keep secure!)
-
-#### Methods
-
-- `getBalance(paymentProvider: PaymentInterface): Promise<string>` - Check balance
-- `send(toAddress: string, amount: string, paymentProvider: PaymentInterface): Promise<Transaction>` - Send
-
-### TransactionWithFees
-
-Represents a cryptocurrency transaction with fee breakdown.
-
-#### Properties
-
-- `transaction: Transaction` - The transaction details
-- `feeBreakdown: FeeBreakdown` - Detailed fee information
-
-#### Methods
-
-- `broadcast(): Promise<string>` - Broadcasts the transaction to the network
-- `getFormattedSummary(): string` - Gets formatted transaction summary
-
-### FeeManager
-
-Manages developer fees and wallet configuration.
-
-#### Methods
-
-- `getDeveloperFeePercentage(amount: string): string` - Gets fee percentage for amount
-- `getFeeTier(amount: string): string` - Gets transaction tier information
-- `getDeveloperWalletAddress(coinType: CoinType): string` - Gets developer wallet for cryptocurrency
-- `getAllDeveloperWallets(): Map<CoinType, string>` - Gets all developer wallets
-- `updateDeveloperWallet(coinType: CoinType, address: string): FeeManager` - Updates developer wallet
-- `updateAllDeveloperWallets(wallets: Map<CoinType, string>): FeeManager` - Updates all developer wallets
-
-### UsdPaymentGateway
-
-Enhanced payment gateway with USD support and external wallet integration.
+The main entry point for the Freetime SDK.
 
 #### Constructor
 
-- `new UsdPaymentGateway(merchantWalletAddress: string, merchantCoinType: CoinType)` - Creates a new payment gateway
+- `new FreetimePay(config: DeveloperConfig)` - Creates a new FreetimePay instance
 
 #### Methods
 
-- `createUsdPaymentRequest(usdAmount: BN, customerReference?: string, description?: string): Promise<UsdPaymentRequest>` - Creates a USD payment request
-- `createUsdPaymentWithWalletSelection(...): Promise<UsdPaymentRequestWithWalletSelection>` - Creates payment with wallet selection
-- `checkUsdPaymentStatus(paymentId: string): Promise<PaymentStatus>` - Checks payment status
-- `getUsdPaymentDetails(paymentId: string): UsdPaymentDetails | null` - Gets payment details
-- `getCurrentExchangeRates(): Promise<Map<CoinType, BN>>` - Gets current exchange rates
-- `getAvailableWalletApps(): ExternalWalletApp[]` - Gets available wallet apps
-- `generatePaymentDeepLink(walletApp: ExternalWalletApp, usdPaymentRequest: UsdPaymentRequest): string` - Generates payment deep link
-- `isWalletSupported(walletApp: ExternalWalletApp): boolean` - Checks if wallet is supported
+- `registerProvider(provider: PaymentProvider): void` - Registers a payment provider
+- `registerDefaultCryptoProviders(addresses: Record<string, string>): void` - Registers all default crypto providers
+- `getAvailableProviders(): PaymentProvider[]` - Returns the list of available providers
+- `processPayment(providerName: string, request: PaymentRequest, onResult: (result: PaymentResult) => void): void` - Processes a payment with the selected provider
+- `showPaymentSheet(request: PaymentRequest): Promise<PaymentResult>` - Shows a payment selection interface
 
-### ExternalWalletApp
+### DeveloperConfig
 
-Represents an external wallet application with deep link support.
+Configuration for the SDK.
+
+#### Constructor
+
+- `new DeveloperConfig(developerId: string, enablePromotions?: boolean, customPromotionUrl?: string | null, hideDefaultPromotions?: boolean)`
 
 #### Properties
 
-- `name: string` - Wallet app name
-- `packageName: string` - Package name for the app
-- `supportedCoins: CoinType[]` - Supported cryptocurrencies
-- `deepLinkScheme: string` - Deep link scheme
+- `developerId: string` - Your unique developer identifier
+- `enablePromotions: boolean` - Whether to enable the promotion system (default: true)
+- `customPromotionUrl: string | null` - Custom URL for promotion JSON (default: null)
+- `hideDefaultPromotions: boolean` - Whether to hide default promotions (default: false)
 
-#### Methods
+### PaymentRequest
 
-- `generatePaymentDeepLink(address: string, amount: BN, coinType: CoinType): string` - Generates deep link
-- `isInstalled(): boolean` - Checks if wallet is installed
+Represents a payment request.
 
-#### Predefined Wallet Apps
+#### Constructor
 
-- `ExternalWalletApp.TRUST_WALLET` - Trust Wallet
-- `ExternalWalletApp.META_MASK` - MetaMask
-- `ExternalWalletApp.COINBASE_WALLET` - Coinbase Wallet
-- `ExternalWalletApp.BINANCE_WALLET` - Binance Wallet
-- `ExternalWalletApp.EXODUS` - Exodus
-- `ExternalWalletApp.ATOMIC_WALLET` - Atomic Wallet
-- And 20+ more wallet apps
-
-### ExternalWalletManager
-
-Manages external wallet operations and selection.
-
-#### Methods
-
-- `createPaymentWithWalletSelection(usdPaymentRequest: UsdPaymentRequest, coinType: CoinType): UsdPaymentRequestWithWalletSelection` - Creates payment with wallet selection
-- `getAllSupportedWallets(): ExternalWalletApp[]` - Gets all supported wallets
-- `getWalletsForCryptocurrency(coinType: CoinType): ExternalWalletApp[]` - Gets wallets for specific cryptocurrency
-- `generatePaymentDeepLink(walletApp: ExternalWalletApp, address: string, amount: BN, coinType: CoinType): string` - Generates deep link
-- `isCoinSupported(walletApp: ExternalWalletApp, coinType: CoinType): boolean` - Checks coin support
-
-### UsdPaymentRequestWithWalletSelection
-
-Enhanced payment request with external wallet integration.
+- `new PaymentRequest(amount: number, currency: string, description: string, metadata?: Record<string, string>)`
 
 #### Properties
 
-- `usdPaymentRequest: UsdPaymentRequest` - Base payment request
-- `availableWalletApps: ExternalWalletApp[]` - Available wallet apps
-- `selectedWalletApp?: ExternalWalletApp` - Selected wallet app
-- `walletSelectionRequired: boolean` - Whether wallet selection is required
+- `amount: number` - The amount to be paid
+- `currency: string` - The currency code (e.g., "USD", "EUR")
+- `description: string` - Description of the purchase
+- `metadata: Record<string, string>` - Additional metadata
+
+### PaymentResult
+
+Result of a payment operation. Can be one of:
+
+- `PaymentResultSuccess` - Successful payment with transaction ID and amount
+- `PaymentResultError` - Failed payment with error message and optional code
+- `PaymentResultCancelled` - User cancelled the payment
+
+### PaymentProvider
+
+Interface for all payment providers.
+
+#### Properties
+
+- `name: string` - The provider name
 
 #### Methods
 
-- `getPaymentDeepLink(): string | null` - Gets payment deep link for selected wallet
-- `selectWallet(walletApp: ExternalWalletApp): UsdPaymentRequestWithWalletSelection` - Selects a wallet app
-- `getFormattedInfo(): string` - Gets formatted payment info
+- `processPayment(request: PaymentRequest, onResult: (result: PaymentResult) => void): void` - Initiates the payment process
 
-## Developer Fees
+### PaymentSelectionCLI
 
-The SDK implements a tiered fee structure to support ongoing development:
+CLI-based payment selection interface for Node.js environments.
 
-| Transaction Amount | Fee Percentage | Tier |
-|-------------------|----------------|------|
-| >= 1000 | 0.05% | Enterprise |
-| >= 100 | 0.1% | Business |
-| >= 10 | 0.25% | Professional |
-| >= 1 | 0.35% | Standard |
-| >= 0.1 | 0.4% | Basic |
-| < 0.1 | 0.5% | Micro |
+#### Constructor
 
-### Fee Management
+- `new PaymentSelectionCLI(sdk: FreetimePay)` - Creates a new CLI payment selection interface
 
-```javascript
-const feeManager = sdk.getFeeManager();
+#### Methods
 
-// Get current fee percentage
-const feePercentage = feeManager.getDeveloperFeePercentage('1.5');
-console.log(`Fee percentage: ${feePercentage}%`);
+- `showPaymentSelection(request: PaymentRequest): Promise<PaymentResult>` - Shows an interactive payment selection interface
+- `close(): void` - Closes the readline interface
 
-// Get fee tier
-const tier = feeManager.getFeeTier('1.5');
-console.log(`Tier: ${tier}`);
+### PromotionManager
 
-// Update developer wallet
-feeManager.updateDeveloperWallet(CoinType.BITCOIN, 'new-developer-wallet-address');
-```
+Manages promotion fetching and display.
 
-## Supported Cryptocurrencies
+#### Static Methods
 
-- **Bitcoin (BTC)** - The original cryptocurrency
-- **Ethereum (ETH)** - Smart contract platform
-- **Litecoin (LTC)** - Faster Bitcoin alternative
-- **Bitcoin Cash (BCH)** - Bitcoin fork with larger blocks
-- **Dogecoin (DOGE)** - Popular meme cryptocurrency
-- **Solana (SOL)** - High-performance blockchain
-- **Polygon (MATIC)** - Ethereum scaling solution
-- **Binance Coin (BNB)** - Exchange token
-- **Tron (TRX)** - Decentralized entertainment platform
+- `fetchPromotion(config: DeveloperConfig): Promise<Promotion | null>` - Fetches a random promotion
 
-## Supported External Wallets
+### Promotion
 
-The SDK supports 25+ popular wallet applications with automatic deep link generation:
+Represents a promotional item.
 
-### Major Wallets
-- **Trust Wallet** - Multi-currency wallet with dApp browser
-- **MetaMask** - Popular Ethereum wallet and dApp browser
-- **Coinbase Wallet** - Coinbase's self-custody wallet
-- **Binance Wallet** - Binance's official wallet
-- **Exodus** - User-friendly desktop and mobile wallet
+#### Properties
 
-### Hardware Wallets
-- **Ledger Live** - Ledger's companion app
-- **Trezor Suite** - Trezor's desktop wallet
-
-### Specialized Wallets
-- **Atomic Wallet** - Multi-asset wallet with atomic swaps
-- **Mycelium** - Bitcoin-focused Android wallet
-- **Electrum** - Lightweight Bitcoin wallet
-- **Phantom** - Solana ecosystem wallet
-- **Solflare** - Solana wallet with Web3 support
-- **Rainbow** - Ethereum wallet with social features
-- **Safe** - Multi-signature wallet
-- **Argent** - Layer 2 Ethereum wallet
-- **Zerion** - DeFi-focused wallet
-
-### Exchange Wallets
-- **Binance Wallet** - Exchange-integrated wallet
-- **Coinbase Wallet** - Exchange self-custody option
-
-### Mobile-First Wallets
-- **imToken** - Asian market leader
-- **MathWallet** - Multi-chain wallet
-- **TokenPocket** - Comprehensive dApp ecosystem
-- **TronWallet** - Tron ecosystem wallet
-- **Klever Wallet** - Tron-focused wallet
-- **BitKeep Wallet** - Global multi-chain wallet
-
-### Browser Wallets
-- **Brave Wallet** - Built into Brave browser
-- **WalletConnect** - Wallet connection protocol
-
-Each wallet app supports different cryptocurrencies and generates appropriate deep links for payment processing.
-
-## Security
-
-- All cryptographic operations are performed locally
-- Private keys never leave your application
-- Address validation for all supported cryptocurrencies
-- Secure random number generation for wallet creation
-
-## Production Environment
-
-For production use, ensure you:
-
-1. Store private keys securely (consider using hardware wallets)
-2. Implement proper error handling
-3. Use HTTPS for all network communications
-4. Validate all user inputs
-5. Monitor transaction status
+- `id: string` - Unique identifier
+- `title: string` - Promotion title
+- `description: string` - Promotion description
+- `iconUrl: string` - URL to promotion icon
+- `targetUrl: string` - URL to promotion target
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Support
-
-For support, please open an issue on the GitHub repository or contact the Freetime Maker team.
+Apache-2.0
 
 ## About
 
-This is the official Node.js port of the Freetime Payment SDK. For the original Android version, visit [FreetimeMaker/FreetimeSDK](https://github.com/FreetimeMaker/FreetimeSDK).
-
-## Changelog
-
-### v1.1.0 (August 19, 2026)
-- 🚀 **PRODUCTION READY**: Initial production release with full feature set
-- 💳 **NEW**: Offline-First Payment support with `TransactionQueue` and auto-retry
-- 🏥 **NEW**: Health Monitoring system for real-time SDK stability tracking
-- 📊 **NEW**: Statistics Manager for player engagement and churn prediction
-- 🛡️ **ENHANCEMENT**: Enhanced local cryptography with biometric-simulated security
-- 📱 **ALIGNMENT**: Full feature parity with Android SDK v1.1.0
-- 🔧 **UPDATE**: Improved address validation for all supported cryptocurrencies
-
-### v1.0.6 (February 11, 2026)
-- 🎮 **NEW**: Gaming Integration with achievement system and leaderboards
-- 👤 **NEW**: User Wallet Configuration for personalized wallet management
-- 🏆 **NEW**: Player Progress Tracking with XP and levels
-- 📊 **NEW**: Game Session Management with cryptocurrency rewards
-- 🔧 **UPDATE**: Updated dependencies to latest versions (Ethers v6.16.0, TypeScript 5.6.0)
-- 📱 **ALIGNMENT**: Feature parity with Android SDK v1.0.6
-- 🎯 **ENHANCEMENT**: Improved achievement system with coin rewards
-- 🛠️ **TECHNICAL**: Updated to modern development toolchain
-
-### v1.0.3 (February 9, 2026)
-- ✨ **NEW**: External Wallet Integration with 25+ wallet apps
-- ✨ **NEW**: USD Payment Gateway with automatic crypto conversion
-- ✨ **NEW**: Deep link generation for all major wallet apps
-- ✨ **NEW**: Wallet selection UI components
-- ✨ **NEW**: Support for Trust Wallet, MetaMask, Coinbase, etc.
-- 📱 **ENHANCEMENT**: Mobile wallet app detection
-- 🔗 **ENHANCEMENT**: Automatic deep link routing
-- 📚 **DOCS**: Updated documentation with examples
-
-### v1.0.2 (Previous)
-- 🎉 Initial release with core SDK functionality
-- 💰 Multi-cryptocurrency support (9 coins)
-- 🔐 Developer fee system
-- 📊 Transaction fee estimation
-- 🛡️ Production-ready security features
+The Official Payment SDK from Freetime Maker - Node.js version ported from the original Android SDK.

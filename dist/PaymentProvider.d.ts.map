@@ -1,0 +1,1 @@
+{"version":3,"file":"PaymentProvider.d.ts","sourceRoot":"","sources":["../src/PaymentProvider.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,aAAa,EAAE,MAAM,iBAAiB,CAAC;AAEhE;;GAEG;AACH,MAAM,WAAW,eAAe;IAC5B,QAAQ,CAAC,IAAI,EAAE,MAAM,CAAC;IAEtB;;;;OAIG;IACH,cAAc,CAAC,OAAO,EAAE,cAAc,EAAE,QAAQ,EAAE,CAAC,MAAM,EAAE,aAAa,KAAK,IAAI,GAAG,IAAI,CAAC;CAC5F"}

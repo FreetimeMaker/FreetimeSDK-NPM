@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.VeChainProvider = void 0;
+const CryptoProviderBase_1 = require("./CryptoProviderBase");
+/**
+ * VeChain (VET) Provider.
+ * Uses the 'vechain:' URI scheme.
+ */
+class VeChainProvider extends CryptoProviderBase_1.CryptoProviderBase {
+    constructor() {
+        super(...arguments);
+        this.name = 'VeChain (VET)';
+    }
+    getUriScheme() {
+        return 'vechain:';
+    }
+    getUriParameters(request) {
+        return `?amount=${request.amount}&label=${encodeURIComponent(request.description)}`;
+    }
+}
+exports.VeChainProvider = VeChainProvider;
+//# sourceMappingURL=VeChainProvider.js.map

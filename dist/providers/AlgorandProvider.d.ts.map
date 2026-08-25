@@ -1,0 +1,1 @@
+{"version":3,"file":"AlgorandProvider.d.ts","sourceRoot":"","sources":["../../src/providers/AlgorandProvider.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,kBAAkB,EAAE,MAAM,sBAAsB,CAAC;AAC1D,OAAO,EAAE,cAAc,EAAE,MAAM,kBAAkB,CAAC;AAElD;;;GAGG;AACH,qBAAa,gBAAiB,SAAQ,kBAAkB;IACpD,QAAQ,CAAC,IAAI,qBAAqB;IAElC,YAAY,IAAI,MAAM;IAItB,gBAAgB,CAAC,OAAO,EAAE,cAAc,GAAG,MAAM;CAGpD"}

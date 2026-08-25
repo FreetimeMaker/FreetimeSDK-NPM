@@ -1,0 +1,1 @@
+{"version":3,"file":"DeveloperConfig.js","sourceRoot":"","sources":["../src/DeveloperConfig.ts"],"names":[],"mappings":";;;AAAA;;GAEG;AACH,MAAa,eAAe;IACxB,YACoB,WAAmB,EACnB,mBAA4B,IAAI,EAChC,qBAAoC,IAAI,EACxC,wBAAiC,KAAK;QAHtC,gBAAW,GAAX,WAAW,CAAQ;QACnB,qBAAgB,GAAhB,gBAAgB,CAAgB;QAChC,uBAAkB,GAAlB,kBAAkB,CAAsB;QACxC,0BAAqB,GAArB,qBAAqB,CAAiB;IACvD,CAAC;CACP;AAPD,0CAOC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"PolkadotProvider.d.ts","sourceRoot":"","sources":["../../src/providers/PolkadotProvider.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,kBAAkB,EAAE,MAAM,sBAAsB,CAAC;AAC1D,OAAO,EAAE,cAAc,EAAE,MAAM,kBAAkB,CAAC;AAElD;;;GAGG;AACH,qBAAa,gBAAiB,SAAQ,kBAAkB;IACpD,QAAQ,CAAC,IAAI,oBAAoB;IAEjC,YAAY,IAAI,MAAM;IAItB,gBAAgB,CAAC,OAAO,EAAE,cAAc,GAAG,MAAM;CAGpD"}

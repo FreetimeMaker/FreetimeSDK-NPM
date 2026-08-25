@@ -1,0 +1,1 @@
+{"version":3,"file":"AvalancheProvider.d.ts","sourceRoot":"","sources":["../../src/providers/AvalancheProvider.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,kBAAkB,EAAE,MAAM,sBAAsB,CAAC;AAC1D,OAAO,EAAE,cAAc,EAAE,MAAM,kBAAkB,CAAC;AAElD;;;GAGG;AACH,qBAAa,iBAAkB,SAAQ,kBAAkB;IACrD,QAAQ,CAAC,IAAI,sBAAsB;IAEnC,YAAY,IAAI,MAAM;IAItB,gBAAgB,CAAC,OAAO,EAAE,cAAc,GAAG,MAAM;CAGpD"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"DeveloperConfig.d.ts","sourceRoot":"","sources":["../src/DeveloperConfig.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,qBAAa,eAAe;aAEJ,WAAW,EAAE,MAAM;aACnB,gBAAgB,EAAE,OAAO;aACzB,kBAAkB,EAAE,MAAM,GAAG,IAAI;aACjC,qBAAqB,EAAE,OAAO;gBAH9B,WAAW,EAAE,MAAM,EACnB,gBAAgB,GAAE,OAAc,EAChC,kBAAkB,GAAE,MAAM,GAAG,IAAW,EACxC,qBAAqB,GAAE,OAAe;CAE7D"}

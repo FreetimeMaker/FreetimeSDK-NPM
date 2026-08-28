@@ -99,7 +99,7 @@ export class FreetimePay {
      * Shows a payment selection interface (CLI-based for Node.js).
      * In a browser environment, this would show a UI.
      */
-    async showPaymentSheet(request: PaymentRequest): Promise<PaymentResult> {
+    async showPaymentSheet(_request: PaymentRequest): Promise<PaymentResult> {
         return new Promise((resolve) => {
             if (this.providers.length === 0) {
                 resolve(new PaymentResultError('No payment providers registered'));

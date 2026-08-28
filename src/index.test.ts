@@ -8,8 +8,7 @@ import {
     PaymentResultSuccess,
     PaymentResultError,
     PaymentResultCancelled,
-    BitcoinProvider,
-    EthereumProvider 
+    BitcoinProvider
 } from './index';
 
 describe('FreetimePay', () => {
@@ -128,7 +127,7 @@ describe('BitcoinProvider', () => {
 
     test('should generate bitcoin URI', () => {
         const provider = new BitcoinProvider('1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa');
-        const request = new PaymentRequest(0.5, 'USD', 'Test');
+        new PaymentRequest(0.5, 'USD', 'Test');
         
         // The provider should generate a valid bitcoin URI
         expect(provider.name).toBe('Bitcoin (BTC)');

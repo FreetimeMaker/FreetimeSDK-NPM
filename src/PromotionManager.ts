@@ -53,7 +53,7 @@ export class PromotionManager {
         }
     }
 
-    private static fetchJson(url: string): Promise<any> {
+    private static fetchJson(url: string): Promise<{ promotions?: Promotion[] }> {
         return new Promise((resolve, reject) => {
             https.get(url, (res) => {
                 let data = '';

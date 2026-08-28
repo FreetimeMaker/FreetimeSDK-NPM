@@ -83,7 +83,7 @@ export class PaymentSelectionCLI {
                 console.log(`   🔗 ${promotion.targetUrl}`);
                 console.log('========================\n');
             }
-        } catch (error) {
+        } catch {
             // Silently fail if promotion fetch fails
         }
     }

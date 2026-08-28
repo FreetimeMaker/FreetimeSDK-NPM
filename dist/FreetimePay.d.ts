@@ -29,6 +29,6 @@ export declare class FreetimePay {
      * Shows a payment selection interface (CLI-based for Node.js).
      * In a browser environment, this would show a UI.
      */
-    showPaymentSheet(request: PaymentRequest): Promise<PaymentResult>;
+    showPaymentSheet(_request: PaymentRequest): Promise<PaymentResult>;
 }
 //# sourceMappingURL=FreetimePay.d.ts.map

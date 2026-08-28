@@ -106,7 +106,7 @@ class PaymentSelectionCLI {
                 console.log('========================\n');
             }
         }
-        catch (error) {
+        catch {
             // Silently fail if promotion fetch fails
         }
     }
